@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gym-app-deployment
+  labels:
+    app: gym-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gym-app
+  template:
+    metadata:
+      name: app-pod
+      labels:
+        app: gym-app
+
+    spec:
+      containers:
+        - name: gym-app
+          image: swastikb/gym-tracker-app:latest
+          ports:
+            - containerPort: 8000

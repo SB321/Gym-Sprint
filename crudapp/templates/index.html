@@ -1,0 +1,270 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Crudapp Django</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        *{
+            font-family: 'Poppins', sans-serif;
+        }
+        .btnhead{
+            background-color:#0059b3;
+            color: #fff;
+
+        }
+        .btnhead:hover {
+            background-color:#002ead;
+            transition: 0.7s;
+            color: #fff;
+        }
+
+    </style>
+      <h1 align="center"> GYM Workout Tracker</h1>
+</head>
+  <body class="bg-light">
+    <div class="container mt-5 p-5 rounded shadow bg-white">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="mb-3 alert alert-success text-center">
+                        {{message}}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        <div class="d-flex mb-3 justify-content-between align-items-center">
+            <a href="" data-bs-toggle="modal" data-bs-target="#addworkoutModal" class="btn px-3 btnhead">Add Workout</a>
+<!--            <a href="" data-bs-toggle="modal" data-bs-target="#viewWorkout" class="btn px-3 btnhead">View</a>-->
+            <div class="">
+                <form method="post" class="d-flex">
+                    {% csrf_token %}
+                    <input type="search" name="query" class="form-control" placeholder="Search here.." value="{{search_query}}">
+                    <button class="btn btn-success btn-sm px-3 mx-2" name="search">Search</button>
+                </form>
+            </div>
+        </div>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+
+                    <th scope="col">Name</th>
+                    <th scope="col">Reps</th>
+                    <th scope="col">Sets</th>
+                    <th scope="col">Kg's</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for w in workouts %}
+                    <tr>
+
+                        <td>{{w.name}}</td>
+                        <td>{{w.reps}}</td>
+                        <td>{{w.sets}}</td>
+                        <td>{{w.kg}}</td>
+                        <td>{{w.date}}</td>
+
+                        <td>
+                            <a href="" data-bs-toggle="modal" data-bs-target="#updateworkoutModal_{{w.id}}" class="btn btn-sm btn-success"><i class="fa-regular fa-pen-to-square"></i></a>
+                            <a href="" data-bs-toggle="modal" data-bs-target="#deleteworkoutModal_{{w.id}}" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></a>
+                        </td>
+
+                    </tr>
+                    <!-- update workout modal -->
+                    <div class="modal fade" id="updateworkoutModal_{{w.id}}" tabindex="-1" aria-labelledby="updateworkoutModal_{{w.id}}Label" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <form action="" method="post">
+                                {% csrf_token %}
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="updateworkoutModal_{{w.id}}Label">Update Workout</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <input type="hidden" name="id" value="{{w.id}}">
+                                        <div class="">
+                                            <label for="name">Name</label>
+                                            <input required type="text" value="{{w.name}}" name="name" class="form-control">
+                                        </div>
+                                        <div class="mt-3">
+                                            <label for="reps">Reps</label>
+                                            <input required type="number" value="{{w.reps}}" name="reps" class="form-control">
+                                        </div>
+                                        <div class="mt-3">
+                                            <label for="sets">Sets</label>
+                                            <input required type="number" value="{{w.sets}}" name="sets" class="form-control">
+                                        </div>
+                                        <div class="mt-3">
+                                            <label for="kg">Kg's</label>
+                                            <input required type="number" value="{{w.kg}}" name="kg" class="form-control">
+                                        </div>
+                                        <div class="mt-3">
+                                            <label for="date">Date</label>
+                                            <input required type="date" value="{{w.date}}" name="date" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-primary" name="update">Update Workout</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- delete workout modal -->
+                    <div class="modal fade" id="deleteworkoutModal_{{w.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="deleteworkoutModal_{{w.id}}Label" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <form action="" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="id" value="{{w.id}}">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <p>Do you want to Delete?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-danger" name="delete">Delete Workout</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+
+                <!-- view student modal -->
+                    <div class="modal fade" id="viewsessionModal_{{student.id}}" tabindex="-1" aria-labelledby="viewsessionModal_{{student.id}}Label" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <form action="" method="post">
+                                {% csrf_token %}
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="viewsessionModal_{{w.id}}Label">See Workouts</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <input type="hidden" name="id" value="{{w.id}}">
+                                        <div class="">
+                                            <label for="name">Name</label>
+                                            <input required type="text" value="{{w.name}}" name="name" class="form-control">
+                                        </div>
+                                        <div class="mt-3">
+                                            <label for="reps">Reps</label>
+                                            <input required type="number" value="{{w.reps}}" name="reps" class="form-control">
+                                        </div>
+                                        <div class="mt-3">
+                                            <label for="sets">Sets</label>
+                                            <input required type="number" value="{{w.sets}}" name="sets" class="form-control">
+                                        </div>
+                                        <div class="mt-3">
+                                            <label for="kg">Kg's</label>
+                                            <input required type="number" value="{{w.kg}}" name="kg" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-primary" name="update">Check Workout</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+
+
+    <!-- add workout modal -->
+
+    <!-- Modal -->
+    <div class="modal fade" id="addworkoutModal" tabindex="-1" aria-labelledby="addworkoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form action="" method="post">
+                {% csrf_token %}
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="addworkoutLabel">Add New Workout</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="">
+                            <label for="name">Name</label>
+                            <input required type="text" name="name" class="form-control">
+                        </div>
+                        <div class="mt-3">
+                            <label for="reps">Reps</label>
+                            <input required type="number" name="reps" class="form-control">
+                        </div>
+                        <div class="mt-3">
+                            <label for="sets">Sets</label>
+                            <input required type="number" name="sets" class="form-control">
+                        </div>
+                        <div class="mt-3">
+                            <label for="kg">Kg's</label>
+                            <input required type="number" name="kg" class="form-control">
+                        </div>
+                        <div class="mt-3">
+                            <label for="date">Date</label>
+                            <input required type="date" name="date" class="form-control">
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" name="addworkout">Add Workout</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- View workout modal -->
+
+    <!-- Modal -->
+    <div class="modal fade" id="viewWorkout"   role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Reps</th>
+                    <th scope="col">Sets</th>
+                    <th scope="col">Kg's</th>
+                    <th scope="col">WID</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for w in workouts %}
+                    <tr>
+                        <th>{{w.id}}</th>
+                        <td>{{w.name}}</td>
+                        <td>{{w.reps}}</td>
+                        <td>{{w.sets}}</td>
+                        <td>{{w.kg}}</td>
+                        <td>{{w.workoutid}}</td>
+
+                    </tr>
+
+                {% endfor %}
+
+            </tbody>
+            </table>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+  </body>
+</html>
