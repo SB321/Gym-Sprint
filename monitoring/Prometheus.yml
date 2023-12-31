@@ -15,9 +15,9 @@ scrape_configs:
   - job_name: 'jenkins'
     metrics_path: '/prometheus'
     static_configs:
-      - targets: ['34.148.204.82:8080']
+      - targets: ['Jenkins-IP:8080']
 
   - job_name: 'GymSprint'
     metrics_path: '/metrics'
     static_configs:
-      - targets: ['34.30.181.186:9100']
+      - targets: ['Node-IP:9100']
