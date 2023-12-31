@@ -15,7 +15,7 @@ pipeline {
         stage("GithubCode"){
             steps {
                 echo "Cloning the code"
-                git url:"https://github.com/SB321/Gym-Workout-Tracker.git", branch: "master"
+                git url:"https://github.com/SB321/Gym-Sprint.git", branch: "master"
             }
         }
         stage("Sonarqube Analysis") {
@@ -34,7 +34,7 @@ pipeline {
                     script{
                         
                         def qg = waitForQualityGate()
-                        print "Finished waiting"
+                        print "Quality Gate Checked"
                         if (qg.status != 'OK') {
                             error "Pipeline aborted due to quality gate failure: ${qg.status}"
                         }
