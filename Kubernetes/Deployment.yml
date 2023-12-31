@@ -18,6 +18,6 @@ spec:
     spec:
       containers:
         - name: gym-app
-          image: swastikb/gym-tracker-app:latest
+          image: swastikb/gymsprint-app:latest
           ports:
             - containerPort: 8000
